@@ -16,6 +16,7 @@
 
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+    <link href="{{ asset('vendor/toastr/toastr.min.css') }}" rel="stylesheet">
 </head>
 
 <body>
@@ -78,9 +79,36 @@
         </nav>
 
         <main class="py-4">
+            <div class="w-25 mx-auto">
+                @if (session('success'))
+                    <div id="successMessage" class="alert alert-success">
+                        {{ session('success') }}
+                    </div>
+                @endif
+
+                @if (session('error'))
+                    <div id="errorMessage" class="alert alert-danger">
+                        {{ session('error') }}
+                    </div>
+                @endif
+            </div>
             @yield('content')
         </main>
     </div>
+    <script>
+        setTimeout(function() {
+            var successMessage = document.getElementById('successMessage');
+            var errorMessage = document.getElementById('errorMessage');
+
+            if (successMessage) {
+                successMessage.parentNode.removeChild(successMessage);
+            }
+
+            if (errorMessage) {
+                errorMessage.parentNode.removeChild(errorMessage);
+            }
+        }, 2000); // 2 seconds
+    </script>
 </body>
 
 </html>
