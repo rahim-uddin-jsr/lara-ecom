@@ -13,6 +13,7 @@
                             </div>
                         @endif
                         <a class="btn btn-primary" href="{{ route('category.index') }}">Category</a>
+                        <a class="btn btn-primary" href="{{ route('product.index') }}">Products</a>
                     </div>
                 </div>
             </div>

@@ -5,17 +5,6 @@
         <h2>All categories</h2>
         <a class="btn btn-info" href="{{ route('category.create') }}">Create Category</a>
         <table class="table">
-            @if (session('success'))
-                <div id="successMessage" class="alert alert-success">
-                    {{ session('success') }}
-                </div>
-            @endif
-
-            @if (session('error'))
-                <div id="errorMessage" class="alert alert-danger">
-                    {{ session('error') }}
-                </div>
-            @endif
             <thead>
                 <tr>
                     <th>Name</th>

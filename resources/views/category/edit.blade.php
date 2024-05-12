@@ -2,17 +2,6 @@
 @section('content')
     <div class="container w-25">
         <h2 class="text-center">Edit Category</h2>
-        @if (session('success'))
-            <div id="successMessage" class="alert alert-success">
-                {{ session('success') }}
-            </div>
-        @endif
-
-        @if (session('error'))
-            <div id="errorMessage" class="alert alert-danger">
-                {{ session('error') }}
-            </div>
-        @endif
         <form action="{{ route('category.update', $category) }}" method="POST">
             @csrf
             @method('put')

@@ -2,7 +2,6 @@
 @section('content')
     <div class="container w-25">
         <h2 class="text-center">Add Category</h2>
-
         <form action="{{ route('category.store') }}" method="POST">
             @csrf
             <div class="form-group mt-2">

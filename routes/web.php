@@ -1,6 +1,10 @@
 <?php
 
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ProductController;
+use App\Models\Product;
+use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -16,12 +20,24 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
-});
+    $products = Product::with('images', 'category')->paginate(8);
+    $cartItems = Cart::content();
+    $cartCount = Cart::count();
+
+    return view('welcome', compact('products', 'cartItems', 'cartCount'));
+})->name('app');
+Route::get('/add-to-cart/{product}', [CartController::class, 'store'])->name('add.to.cart');
+Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+Route::get('/cart-remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
+Route::get('/clear-cart', [CartController::class, 'clearCart'])->name('cart.clear');
+Route::put('/cart-quantity-update/{id}', [CartController::class, 'incrementQuantity'])->name('cart.quantity.update');
+Route::get('/checkout', function () {
+    return view('store.checkout.index');
+})->name('checkout');
 
 Auth::routes();
 
-Route::prefix('/dashboard')->group(function () {
+Route::middleware('can:isAdmin')->prefix('/dashboard')->group(function () {
     Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('dashboard');
     Route::prefix('category')->name('category.')->group(function () {
         Route::get('/', [CategoryController::class, 'index'])->name('index');
@@ -30,5 +46,14 @@ Route::prefix('/dashboard')->group(function () {
         Route::put('/update/{category}', [CategoryController::class, 'update'])->name('update');
         Route::post('/store', [CategoryController::class, 'store'])->name('store');
         Route::delete('delete/{category}', [CategoryController::class, 'destroy'])->name('destroy');
+    });
+    Route::prefix('products')->name('product.')->group(function () {
+        Route::get('/', [ProductController::class, 'index'])->name('index');
+        Route::get('/create', [ProductController::class, 'create'])->name('create');
+        Route::get('/edit/{product}', [ProductController::class, 'edit'])->name('edit');
+        Route::put('/update/{product}', [ProductController::class, 'update'])->name('update');
+        Route::get('/show/{slug}', [ProductController::class, 'show'])->name('show');
+        Route::post('/store', [ProductController::class, 'store'])->name('store');
+        Route::delete('delete/{product}', [ProductController::class, 'destroy'])->name('destroy');
     });
 });

@@ -23,6 +23,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
+        $this->authorize('create', Category::class);
         return view('category.create');
     }
 
@@ -32,7 +33,7 @@ class CategoryController extends Controller
     public function store(StoreCategoryRequest $request)
     {
         // dd($request->all());
-
+        $this->authorize('create', Category::class);
         $created = Category::create([
             'name' => $request->category_name,
             'slug' => Str::slug($request->category_name),
