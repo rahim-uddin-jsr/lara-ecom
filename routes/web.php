@@ -23,14 +23,21 @@ Route::get('/', function () {
     $products = Product::with('images', 'category')->paginate(8);
     $cartItems = Cart::content();
     $cartCount = Cart::count();
-
+//    return Product::with(['images', 'category', 'supplier'])->paginate(12);
     return view('welcome', compact('products', 'cartItems', 'cartCount'));
 })->name('app');
+
+Route::resource('books',\App\Http\Controllers\BookController::class);
+Route::get('/books-data', [\App\Http\Controllers\BookController::class, 'pagination']);
+Route::get('/search', [\App\Http\Controllers\BookController::class, 'search'])->name('books.search');
+
 Route::get('/add-to-cart/{product}', [CartController::class, 'store'])->name('add.to.cart');
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
 Route::get('/cart-remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
 Route::get('/clear-cart', [CartController::class, 'clearCart'])->name('cart.clear');
 Route::put('/cart-quantity-update/{id}', [CartController::class, 'incrementQuantity'])->name('cart.quantity.update');
+Route::get('/cart-tax-update', [CartController::class, 'editTax'])->name('cart-tax-edit');
+Route::post('/cart-tax-update', [CartController::class, 'updateTax'])->name('cart.updateTax');
 Route::get('/checkout', function () {
     return view('store.checkout.index');
 })->name('checkout');

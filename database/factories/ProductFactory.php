@@ -29,6 +29,9 @@ class ProductFactory extends Factory
             'availability' => fake()->boolean(90), // 90% chance of availability being true
             'category_id' => function () {
                 return \App\Models\Category::inRandomOrder()->first()->id;
+            },
+            'supplier_id' => function () {
+                return \App\Models\Supplier::inRandomOrder()->first()->id;
             }
         ];
     }

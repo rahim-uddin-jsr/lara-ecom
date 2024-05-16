@@ -24,6 +24,9 @@
                         <a class="nav-link active" aria-current="page" href="#">Home</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="{{ route('cart-tax-edit') }}">Cart Tax</a>
+                    </li>
+                    <li class="nav-item">
                         @auth
                             <a class="nav-link" href="{{ route('login') }}">
                                 @if (Auth::user()->role === 'admin')
