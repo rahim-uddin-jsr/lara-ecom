@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\ProductCreated;
+use App\Jobs\SendProductCreatedMail;
 use App\Models\Product;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
@@ -63,9 +64,10 @@ class ProductController extends Controller
                     ]);
                 }
             }
-            dispatch(function () use ($product) {
-                event(new ProductCreated ($product));
-            })->delay(now()->addSeconds(15));
+//            dispatch(function () use ($product) {
+//                event(new ProductCreated ($product));
+//            })->delay(now()->addSeconds(15));
+            SendProductCreatedMail::dispatch($product)->delay(now()->addSeconds(5));
 
         } catch (\Throwable $th) {
             throw $th;
