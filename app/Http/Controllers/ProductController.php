@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\ProductCreated;
 use App\Models\Product;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
@@ -38,17 +39,17 @@ class ProductController extends Controller
     public function store(StoreProductRequest $request)
     {
         try {
-            $product_Id = Product::insertGetId([
+            $product = Product::create([
                 'name' => $request->name,
                 'slug' => Str::slug($request->name),
                 'description' => $request->description,
                 'price' => $request->price,
                 'brand' => $request->brand,
                 'sku' => $request->sku,
+                'supplier_id' => 2,
                 'category_id' => $request->category_id,
                 'quantity' => $request->quantity,
             ]);
-
             if ($request->hasFile('images')) {
                 foreach ($request->file('images') as $key => $image) {
                     $extension = $image->getClientOriginalExtension();
@@ -58,17 +59,21 @@ class ProductController extends Controller
 
                     ProductImage::create([
                         'url' => $destination . '/' . $filename,
-                        'product_id' => $product_Id,
+                        'product_id' => $product->id,
                     ]);
                 }
             }
+            dispatch(function () use ($product) {
+                event(new ProductCreated ($product));
+            })->delay(now()->addSeconds(15));
+
         } catch (\Throwable $th) {
             throw $th;
         }
-
         session()->flash('success', 'Product created successfully!');
         return back();
     }
+
     /**
      * Display the specified resource.
      */
@@ -151,3 +156,6 @@ class ProductController extends Controller
         return back();
     }
 }
+
+
+

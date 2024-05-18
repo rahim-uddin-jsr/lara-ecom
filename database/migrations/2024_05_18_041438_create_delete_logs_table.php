@@ -11,15 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('books', function (Blueprint $table) {
+        Schema::create('delete_logs', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
-            $table->text('description')->nullable();
-            $table->integer('pages')->unsigned();
-            $table->boolean('is_published');
             $table->foreignId('user_id')->onDelete('cascade');
-            $table->date('published_at');
-            $table->decimal('price', 8, 2);
+            $table->foreignId('book_id')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -29,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('books');
+        Schema::dropIfExists('delete_logs');
     }
 };

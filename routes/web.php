@@ -20,14 +20,19 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
+
     $products = Product::with('images', 'category')->paginate(8);
+//    $products = Product::get();
+//    return $products->filter(function ($product) {
+//        return $product->quantity < 2;
+//    });
     $cartItems = Cart::content();
     $cartCount = Cart::count();
-//    return Product::with(['images', 'category', 'supplier'])->paginate(12);
+    //    return Product::with(['images', 'category', 'supplier'])->paginate(12);
     return view('welcome', compact('products', 'cartItems', 'cartCount'));
 })->name('app');
 
-Route::resource('books',\App\Http\Controllers\BookController::class);
+Route::resource('books', \App\Http\Controllers\BookController::class);
 Route::get('/books-data', [\App\Http\Controllers\BookController::class, 'pagination']);
 Route::get('/search', [\App\Http\Controllers\BookController::class, 'search'])->name('books.search');
 
